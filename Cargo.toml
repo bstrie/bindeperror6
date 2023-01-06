@@ -1,0 +1,20 @@
+[package]
+name = "bindepfeatureunify"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+# This crate enables the "XXX" feature, whereas the mybindep crate does not
+myshareddep = { path = "myshareddep", features = ["XXX"] }
+
+## Use only one of the following dependency lines to produce different behavior.
+## Observe the differences with `cargo build -v`.
+
+# With this line, myshareddep will be built once, with the "XXX" feature.
+mybindep = { path = "mybindep", artifact = "bin" }
+
+# With this line, myshareddep will be built twice, once with "XXX" and once without.
+# This would be expected if the listed target were different from the host,
+# but this also happens when the host is x86_64-unknown-linux-gnu,
+# in which case this line should be functionally equivalent to the above.
+mybindep = { path = "mybindep", artifact = "bin", target = "x86_64-unknown-linux-gnu" }
